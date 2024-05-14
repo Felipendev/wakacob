@@ -1,5 +1,7 @@
 server:
   servlet:
-    contex-path: /wakacop
-swagger:
-  enable: true
+    context-path: /wakacop
+
+springdoc:
+  swagger-ui:
+    path: /public/swagger-ui.html
