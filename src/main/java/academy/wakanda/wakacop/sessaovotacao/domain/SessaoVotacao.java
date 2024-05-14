@@ -1,6 +1,6 @@
-package academy.wakanda.wakacop.pauta.domain;
+package academy.wakanda.wakacop.sessaovotacao.domain;
 
-import academy.wakanda.wakacop.pauta.application.api.request.NovaPautaRequest;
+import academy.wakanda.wakacop.sessaovotacao.application.api.request.SessaoAberturaRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,20 +18,18 @@ import java.util.UUID;
 @Entity
 @ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Pauta {
+public class SessaoVotacao {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid", updatable = false, unique = true, nullable = false)
     private UUID id;
-    private String titulo;
-    private String descricao;
-    private UUID idAssociadoAutor;
-    private LocalDateTime dataCriacao;
+    private UUID idPauta;
+    private Integer tempoDuracao ;
+    private LocalDateTime dataAbertura;
 
-    public Pauta(NovaPautaRequest novaPauta) {
-        this.titulo = novaPauta.getTitulo();
-        this.descricao = novaPauta.getDescricao();
-        this.idAssociadoAutor = novaPauta.getIdAssociadoAutor();
-        this.dataCriacao = LocalDateTime.now();
+    public SessaoVotacao(SessaoAberturaRequest aberturaRequest) {
+        this.idPauta = aberturaRequest.getIdPauta();
+        this.tempoDuracao = aberturaRequest.getTempoDuracao().orElse(1);
+        this.dataAbertura = LocalDateTime.now();
     }
 }

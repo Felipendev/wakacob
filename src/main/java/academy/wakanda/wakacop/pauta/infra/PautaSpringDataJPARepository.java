@@ -1,4 +1,4 @@
-package academy.wakanda.wakacop.pauta.application.infra;
+package academy.wakanda.wakacop.pauta.infra;
 
 import academy.wakanda.wakacop.pauta.domain.Pauta;
 import org.springframework.data.jpa.repository.JpaRepository;
