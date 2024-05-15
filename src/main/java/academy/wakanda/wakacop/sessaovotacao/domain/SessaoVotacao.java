@@ -92,7 +92,7 @@ public class SessaoVotacao {
 
     private void validaAssocioado(String cpfAssociado) {
         if (this.votos.containsKey(cpfAssociado)){
-            new RuntimeException("Assiciado Já Votou nessa Sessão!");
+            throw new RuntimeException("Assiciado Já Votou nessa Sessão!");
         }
     }
 
