@@ -1,10 +1,12 @@
 package academy.wakanda.wakacop.sessaovotacao.application.api;
 
 import academy.wakanda.wakacop.sessaovotacao.application.api.request.SessaoAberturaRequest;
+import academy.wakanda.wakacop.sessaovotacao.application.api.response.ResultadoSessaoResponse;
 import academy.wakanda.wakacop.sessaovotacao.application.api.response.SessaoAberturaResponse;
 import academy.wakanda.wakacop.sessaovotacao.application.api.response.VotoResponse;
 import academy.wakanda.wakacop.sessaovotacao.domain.request.VotoRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,4 +26,8 @@ public interface SessaoVotacaoAPI {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{idSessao}/voto")
     VotoResponse recebeVoto(@PathVariable UUID idSessao, @RequestBody VotoRequest request);
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{idSessao}/resultado")
+    ResultadoSessaoResponse obtemResultado(@PathVariable UUID idSessao);
 }

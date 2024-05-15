@@ -4,6 +4,7 @@ import academy.wakanda.wakacop.pauta.application.service.PautaService;
 import academy.wakanda.wakacop.pauta.domain.Pauta;
 import academy.wakanda.wakacop.sessaovotacao.application.api.repository.SessaoAberturaRepository;
 import academy.wakanda.wakacop.sessaovotacao.application.api.request.SessaoAberturaRequest;
+import academy.wakanda.wakacop.sessaovotacao.application.api.response.ResultadoSessaoResponse;
 import academy.wakanda.wakacop.sessaovotacao.application.api.response.SessaoAberturaResponse;
 import academy.wakanda.wakacop.sessaovotacao.application.api.response.VotoResponse;
 import academy.wakanda.wakacop.sessaovotacao.domain.SessaoVotacao;
@@ -39,5 +40,15 @@ public class SessaoVotacaoApplicationService implements SessaoVotacaoService {
         sessaoAberturaRepository.salva(sessao);
         log.info("[finish] - SessaoVotacaoApplicationService - recebeVoto");
         return new VotoResponse(voto);
+    }
+
+    @Override
+    public ResultadoSessaoResponse obtemResultado(UUID idSessao) {
+        log.info("[start] - SessaoVotacaoApplicationService - obtemResultado");
+        SessaoVotacao sessao = sessaoAberturaRepository.buscaPorId(idSessao);
+        ResultadoSessaoResponse resultado = sessao.obtemResultado();
+        sessaoAberturaRepository.salva(sessao);
+        log.info("[finish] - SessaoVotacaoApplicationService - obtemResultado");
+        return resultado;
     }
 }

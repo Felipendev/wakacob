@@ -2,6 +2,7 @@ package academy.wakanda.wakacop.sessaovotacao.domain;
 
 import academy.wakanda.wakacop.pauta.domain.Pauta;
 import academy.wakanda.wakacop.sessaovotacao.application.api.request.SessaoAberturaRequest;
+import academy.wakanda.wakacop.sessaovotacao.application.api.response.ResultadoSessaoResponse;
 import academy.wakanda.wakacop.sessaovotacao.domain.request.VotoRequest;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -58,6 +59,11 @@ public class SessaoVotacao {
         this.votos = new HashMap<>();
     }
 
+    public ResultadoSessaoResponse obtemResultado() {
+        atualizaStatus();
+        return new ResultadoSessaoResponse(this);
+    }
+
     public VotoPauta recebeVoto(VotoRequest votoRequest) {
         validaSessaoAberta();
         validaAssocioado(votoRequest.getCpfAssociado());
@@ -67,13 +73,13 @@ public class SessaoVotacao {
     }
 
     private void validaSessaoAberta() {
-        atualizaSessao();
+        atualizaStatus();
         if (this.status.equals(StatusSessaoVotacao.FECHADA)) {
             throw new RuntimeException("Sessão está fechada!");
         }
     }
 
-    private void atualizaSessao() {
+    private void atualizaStatus() {
         if (this.status.equals(StatusSessaoVotacao.ABERTA)) {
             if (LocalDateTime.now().isAfter(this.momentoEncerramento))
                 fechaSessao();
@@ -88,5 +94,23 @@ public class SessaoVotacao {
         if (this.votos.containsKey(cpfAssociado)){
             new RuntimeException("Assiciado Já Votou nessa Sessão!");
         }
+    }
+
+    public Long getTotalVotos() {
+        return Long.valueOf(this.votos.size());
+    }
+
+    public Long getTotalSim() {
+        return calculaVotosPorOpcao(OpcaoVoto.SIM);
+    }
+
+    public Long getTotalNao() {
+        return calculaVotosPorOpcao(OpcaoVoto.NAO);
+    }
+
+    private Long calculaVotosPorOpcao(OpcaoVoto opcao) {
+        return votos.values().stream()
+                .filter(voto -> voto.opcaoIgual(opcao))
+                .count();
     }
 }
