@@ -1,5 +1,7 @@
 package academy.wakanda.wakacop.sessaovotacao.application.api.service;
 
+import academy.wakanda.wakacop.pauta.application.service.PautaService;
+import academy.wakanda.wakacop.pauta.domain.Pauta;
 import academy.wakanda.wakacop.sessaovotacao.application.api.repository.SessaoAberturaRepository;
 import academy.wakanda.wakacop.sessaovotacao.application.api.request.SessaoAberturaRequest;
 import academy.wakanda.wakacop.sessaovotacao.application.api.response.SessaoAberturaResponse;
@@ -13,11 +15,13 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class SessaoVotacaoApplicationService implements SessaoVotacaoService {
     private final SessaoAberturaRepository sessaoAberturaRepository;
+    private final PautaService pautaService;
 
     @Override
     public SessaoAberturaResponse abreSessao(SessaoAberturaRequest request) {
         log.info("[start] - SessaoVotacaoApplicationService - abreSessao");
-        SessaoVotacao sessaoVotacao = sessaoAberturaRepository.salva(new SessaoVotacao(request));
+        Pauta pauta = pautaService.getPautaPorId(request.getIdPauta());
+        SessaoVotacao sessaoVotacao = sessaoAberturaRepository.salva(new SessaoVotacao(request, pauta));
         log.info("[finish] - SessaoVotacaoApplicationService - abreSessao");
         return new SessaoAberturaResponse(sessaoVotacao);
     }
