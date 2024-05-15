@@ -1,6 +1,6 @@
 package academy.wakanda.wakacop.sessaovotacao.domain;
 
-import academy.wakanda.wakacop.sessaovotacao.domain.api.request.VotoRequest;
+import academy.wakanda.wakacop.sessaovotacao.domain.request.VotoRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,5 +38,9 @@ public class VotoPauta {
         this.cpfAssociado = voto.getCpfAssociado();
         this.opcaoVoto = voto.getOpcaoVoto();
         this.momentoVoto = LocalDateTime.now();
+    }
+
+    public UUID getIdSessao() {
+        return this.sessaoVotacao.getId();
     }
 }

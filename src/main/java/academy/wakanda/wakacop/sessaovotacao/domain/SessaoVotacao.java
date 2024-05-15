@@ -2,7 +2,7 @@ package academy.wakanda.wakacop.sessaovotacao.domain;
 
 import academy.wakanda.wakacop.pauta.domain.Pauta;
 import academy.wakanda.wakacop.sessaovotacao.application.api.request.SessaoAberturaRequest;
-import academy.wakanda.wakacop.sessaovotacao.domain.api.request.VotoRequest;
+import academy.wakanda.wakacop.sessaovotacao.domain.request.VotoRequest;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,10 +17,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.aspectj.weaver.bcel.LazyClassGen;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.context.annotation.Lazy;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -40,8 +38,8 @@ public class SessaoVotacao {
     private Integer tempoDuracao ;
     @Enumerated(EnumType.STRING)
     private StatusSessaoVotacao status;
-    private LocalDateTime dataAbertura;
-    private LocalDateTime dataEncerramento;
+    private LocalDateTime momentoAbertura;
+    private LocalDateTime momentoEncerramento;
 
     @OneToMany(
             mappedBy = "sessaoVotacao",
@@ -54,8 +52,8 @@ public class SessaoVotacao {
     public SessaoVotacao(SessaoAberturaRequest aberturaRequest, Pauta pauta) {
         this.idPauta = pauta.getId();
         this.tempoDuracao = aberturaRequest.getTempoDuracao().orElse(1);
-        this.dataAbertura = LocalDateTime.now();
-        this.dataEncerramento = dataAbertura.plusMinutes(this.tempoDuracao);
+        this.momentoAbertura = LocalDateTime.now();
+        this.momentoEncerramento = momentoAbertura.plusMinutes(this.tempoDuracao);
         this.status = StatusSessaoVotacao.ABERTA;
         this.votos = new HashMap<>();
     }
@@ -77,7 +75,7 @@ public class SessaoVotacao {
 
     private void atualizaSessao() {
         if (this.status.equals(StatusSessaoVotacao.ABERTA)) {
-            if (LocalDateTime.now().isAfter(this.dataEncerramento))
+            if (LocalDateTime.now().isAfter(this.momentoEncerramento))
                 fechaSessao();
         }
     }

@@ -1,4 +1,4 @@
-package academy.wakanda.wakacop.sessaovotacao.domain.api.request;
+package academy.wakanda.wakacop.sessaovotacao.domain.request;
 
 import academy.wakanda.wakacop.sessaovotacao.domain.OpcaoVoto;
 import lombok.Getter;
