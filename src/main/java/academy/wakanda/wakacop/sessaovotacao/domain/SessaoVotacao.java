@@ -1,5 +1,6 @@
 package academy.wakanda.wakacop.sessaovotacao.domain;
 
+import academy.wakanda.wakacop.associado.application.api.service.AssociadoService;
 import academy.wakanda.wakacop.pauta.domain.Pauta;
 import academy.wakanda.wakacop.sessaovotacao.application.api.request.SessaoAberturaRequest;
 import academy.wakanda.wakacop.sessaovotacao.application.api.response.ResultadoSessaoResponse;
@@ -64,9 +65,9 @@ public class SessaoVotacao {
         return new ResultadoSessaoResponse(this);
     }
 
-    public VotoPauta recebeVoto(VotoRequest votoRequest) {
+    public VotoPauta recebeVoto(VotoRequest votoRequest, AssociadoService associadoService) {
         validaSessaoAberta();
-        validaAssocioado(votoRequest.getCpfAssociado());
+        validaAssocioado(votoRequest.getCpfAssociado(), associadoService);
         VotoPauta voto = new VotoPauta(this, votoRequest);
         votos.put(votoRequest.getCpfAssociado(), voto);
         return voto;
@@ -90,7 +91,12 @@ public class SessaoVotacao {
         this.status = StatusSessaoVotacao.FECHADA;
     }
 
-    private void validaAssocioado(String cpfAssociado) {
+    private void validaAssocioado(String cpfAssociado, AssociadoService associadoService) {
+        associadoService.validaAssociadoAptoVoto(cpfAssociado);
+        validaVotoDuplicado(cpfAssociado);
+    }
+
+    private void validaVotoDuplicado(String cpfAssociado) {
         if (this.votos.containsKey(cpfAssociado)){
             throw new RuntimeException("Assiciado Já Votou nessa Sessão!");
         }
