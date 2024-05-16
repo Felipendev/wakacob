@@ -5,3 +5,7 @@ server:
 springdoc:
   swagger-ui:
     path: /public/swagger-ui.html
+
+logging:
+  level:
+    academy.wakanda: ${LOG_LEVEL:DEBUG}
