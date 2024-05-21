@@ -60,35 +60,36 @@ public class SessaoVotacao {
         this.votos = new HashMap<>();
     }
 
-    public ResultadoSessaoResponse obtemResultado() {
-        atualizaStatus();
+    public ResultadoSessaoResponse obtemResultado(PublicaResultadoSessao publicaResultadoSessao) {
+        atualizaStatus(publicaResultadoSessao);
         return new ResultadoSessaoResponse(this);
     }
 
-    public VotoPauta recebeVoto(VotoRequest votoRequest, AssociadoService associadoService) {
-        validaSessaoAberta();
+    public VotoPauta recebeVoto(VotoRequest votoRequest, AssociadoService associadoService, PublicaResultadoSessao publicaResultadoSessao) {
+        validaSessaoAberta(publicaResultadoSessao);
         validaAssocioado(votoRequest.getCpfAssociado(), associadoService);
         VotoPauta voto = new VotoPauta(this, votoRequest);
         votos.put(votoRequest.getCpfAssociado(), voto);
         return voto;
     }
 
-    private void validaSessaoAberta() {
-        atualizaStatus();
+    private void validaSessaoAberta(PublicaResultadoSessao publicaResultadoSessao) {
+        atualizaStatus(publicaResultadoSessao);
         if (this.status.equals(StatusSessaoVotacao.FECHADA)) {
             throw new RuntimeException("Sessão está fechada!");
         }
     }
 
-    private void atualizaStatus() {
+    private void atualizaStatus(PublicaResultadoSessao publicaResultadoSessao) {
         if (this.status.equals(StatusSessaoVotacao.ABERTA)) {
             if (LocalDateTime.now().isAfter(this.momentoEncerramento))
-                fechaSessao();
+                fechaSessao(publicaResultadoSessao);
         }
     }
 
-    private void fechaSessao() {
+    private void fechaSessao(PublicaResultadoSessao publicaResultadoSessao) {
         this.status = StatusSessaoVotacao.FECHADA;
+        publicaResultadoSessao.publica(new ResultadoSessaoResponse(this));
     }
 
     private void validaAssocioado(String cpfAssociado, AssociadoService associadoService) {
